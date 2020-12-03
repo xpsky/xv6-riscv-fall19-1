@@ -3,14 +3,14 @@
 #include "user/user.h"
 #include "kernel/fcntl.h"
 
+char cmd_buf[1024];
+char *a, *n;
+
 inline int print(int fd, char *str)
 {
     return write(fd, str, strlen(str));
 }
 
-// [in-place]
-// replace the left side "|" with "\0"
-// then return the rest of the string or NULL
 char *simple_tok(char *p, char d)
 {
     while (*p != '\0' && *p != d)
@@ -21,8 +21,6 @@ char *simple_tok(char *p, char d)
     return p + 1;
 }
 
-// [in-place]
-// trim spaces on both side
 char *trim(char *c)
 {
     char *e = c;
@@ -44,9 +42,6 @@ void redirect(int k, int pd[])
     close(pd[1]);
 }
 
-char cmd_buf[1024];
-char *a, *n;
-
 void handle(char *cmd)
 {
     char buf[32][32];
@@ -54,7 +49,6 @@ void handle(char *cmd)
     int argc = 0;
 
     cmd = trim(cmd);
-    // fprintf(2, "cmd: %s\n", cmd);
 
     for (int i = 0; i < 32; i++)
         pass[i] = buf[i];
@@ -85,9 +79,6 @@ void handle(char *cmd)
     *c = '\0';
     argc++;
     pass[argc] = 0;
-
-    // fprintf(2, "inpos: %d, outpos: %d\n", input_pos, output_pos);
-
     if (input_pos)
     {
         close(0);
@@ -159,7 +150,6 @@ void handle_cmd()
     exit(0);
 }
 
-// a simple shell
 int main(int argc, char *argv[])
 {
     while (1)
